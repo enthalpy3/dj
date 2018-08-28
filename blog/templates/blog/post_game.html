@@ -1,0 +1,670 @@
+
+{% extends 'blog/base.html' %}
+{%load staticfiles%}
+    {% block content %}
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+        }
+    </style>
+
+<body>
+<div id="canvas">
+</div>
+
+<script>
+ var sky = "{% static 'img/sky.jpg' %}";
+var air3 = "{% static 'img/air3.png' %}";
+ var air3_5 = "{% static 'img/air3-5.png' %}";
+ var air3_50 = "{% static 'img/air3-50.png' %}";
+ var bom = "{% static 'img/bom.png' %}";
+ var mon = "{% static 'img/mon.png' %}";
+ var mon2 = "{% static 'img/mon2.png' %}";
+ var mon3d = "{% static 'img/mon3d.png' %}";
+ var mond = "{% static 'img/mond.png' %}";
+ var N3 = "{% static 'img/N3.png' %}";
+ var piz = "{% static 'img/piz.png' %}";
+ var 구름2 = "{% static 'img/구름2.png' %}";
+ var 구름3 = "{% static 'img/구름3.png' %}";
+
+        var myGamePiece, myBackground, myScore, mySound, myMusic, myGameArea;
+        var myObstacles = [];
+        var myObstacles2 = [];
+        var myObstacles5 = [];
+        var myGun = [];
+        var myGun2 = [];
+        var myGun3 = [];
+        var myGun4 = [];
+        var myGun5 = [];
+        var myGun6 = [];
+        var myC = [];
+        var myScore2 = 0;
+
+        function startGame() {
+            myGameArea = new gameArea("canvas");
+            myGamePiece = new component(150, 40, air3, 10, 165, "image");
+            myBackground = new component(1100, 500, sky, 0, 0, "background");
+            myScore = new component("30px", "Consolas", "black", 900, 40, "text");
+
+            mySound = new sound("https://www.w3schools.com/graphics/bounce.mp3"); // 충돌사운드
+            myMusic = new sound("https://www.w3schools.com/graphics/gametheme.mp3");//배경사운드
+
+            // myMusic.play();
+
+            myGameArea.start();
+        }
+
+        function sound(src) { // 사운드
+            this.sound = document.createElement("audio");
+            this.sound.src = src;
+            this.sound.setAttribute("preload", "auto");
+            this.sound.setAttribute("controls", "none");
+            this.sound.style.display = "none";
+            document.body.appendChild(this.sound);
+            this.play = function () {
+                this.sound.play();
+            }
+            this.stop = function () {
+                this.sound.pause();
+            }
+        }
+
+        function gameArea() {
+            this.canvas = document.createElement("canvas");
+            this.canvas.width = 1100;
+            this.canvas.height = 500;
+            document.getElementById("canvas").appendChild(this.canvas);
+            this.context = this.canvas.getContext("2d");
+            this.frameNo = 0;
+            // this.x = e.layerX;
+            // this.y = e.layerY;
+            this.start = function () {
+                this.interval = setInterval(updateGameArea, 20);
+
+                window.addEventListener('keydown', function (e) {
+                    myGameArea.keys = (myGameArea.keys || []);
+                    myGameArea.keys[e.keyCode] = (e.type == "keydown");
+
+                })
+
+                 window.addEventListener('keyup', function (e) {
+                try {
+                    myGameArea.keys[e.keyCode] = false;
+                } catch  {
+                return;
+                  }
+                })
+
+            }
+
+            this.stop = function () {
+                clearInterval(this.interval);
+                // mySound.play();
+                this.pause = true;
+                alert("게임끝" + "최종점수" + myScore2)
+
+
+            }
+
+            this.clear = function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }
+
+        function component(width, height, color, x, y, type) { // 비행기 ,배경화면
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.energy = 100;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+
+                ctx = myGameArea.context;
+                if (this.type == "text") {
+                    ctx.font = this.width + " " + this.height;
+                    ctx.fillStyle = color;
+                    ctx.fillText(this.text, this.x, this.y);
+                }
+                if (type == "image" || type == "background") {
+                    ctx.drawImage(this.image,
+                        this.x,
+                        this.y,
+                        this.width, this.height);
+                    if (type == "background") {
+                        ctx.drawImage(this.image,
+                            this.x + this.width,
+                            this.y,
+                            this.width, this.height);
+                    }
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+            this.newPos = function () {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.type == "background") {
+                    if (this.x == -(this.width)) {
+                        this.x = 0;
+                    }
+                }
+            }
+
+            this.crashWith = function (otherobj) {
+                var myleft = this.x;
+                var myright = this.x + (this.width) - 15;
+                var mytop = this.y + 20;
+                var mybottom = this.y + (this.height) - 10;
+                var otherleft = otherobj.x;
+                var otherright = otherobj.x + (otherobj.width);
+                var othertop = otherobj.y;
+                var otherbottom = otherobj.y + (otherobj.height);
+                var crash = true;
+                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                    crash = false;
+                }
+                return crash;
+            }
+
+        }
+
+        function component2(width, height, color, x, y, type) { //몬스터
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.energy = 150;
+            this.dirX = Math.floor(Math.random() * -0.8);
+            this.dirY = Math.floor(Math.random() * -3);
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                //상하좌우 왔다리 갔다리  || this.x <= 0
+                if (this.x >= myGameArea.canvas.width - this.width) {
+                    this.dirX *= -1;
+                }
+                if (this.y >= myGameArea.canvas.height - this.height || this.y <= 0) {
+                    this.dirY *= -1;
+                }
+                this.x += this.dirX;
+                this.y += this.dirY;
+
+                ctx = myGameArea.context;
+                if (type == "image") {
+                    ctx.drawImage(this.image,
+                        this.x,
+                        this.y,
+                        this.width, this.height);
+                }
+                this.newPos = function () {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                }
+                this.crashWith = function (otherobj) {
+                    var myleft = this.x;
+                    var myright = this.x + (this.width) - 5;
+                    var mytop = this.y + 20;
+                    var mybottom = this.y + (this.height) - 10;
+                    var otherleft = otherobj.x;
+                    var otherright = otherobj.x + (otherobj.width);
+                    var othertop = otherobj.y;
+                    var otherbottom = otherobj.y + (otherobj.height);
+                    var crash = true;
+                    if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                        crash = false;
+                    }
+                    return crash;
+                }
+            }
+        }
+
+        function component5(width, height, color, x, y, type) { // 중간몬스터
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.energy = 1500;
+            this.dirX = 0;
+            this.dirX = Math.floor(Math.random() * -0.5);
+            this.dirY = Math.floor(Math.random() * -3);
+            // this.dirY = Math.floor(Math.random() * -3);
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                //상하좌우 왔다리 갔다리   this.x >= myGameArea.canvas.width - this.width ||
+                if (this.x <= 650) {
+                    this.dirX *= 0;
+                }
+                if (this.y >= myGameArea.canvas.height - this.height || this.y <= 0) {
+                    this.dirY *= -1;
+                }
+                this.x += this.dirX;
+                this.y += this.dirY;
+
+                ctx = myGameArea.context;
+                if (type == "image") {
+                    ctx.drawImage(this.image,
+                        this.x,
+                        this.y,
+                        this.width, this.height);
+                }
+                this.crashWith = function (otherobj) {
+                    var myleft = this.x + 100;
+                    var myright = this.x + (this.width) - 50;
+                    var mytop = this.y + 50;
+                    var mybottom = this.y + (this.height) - 50;
+                    var otherleft = otherobj.x;
+                    var otherright = otherobj.x + (otherobj.width);
+                    var othertop = otherobj.y;
+                    var otherbottom = otherobj.y + (otherobj.height);
+                    var crash = true;
+                    if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                        crash = false;
+                    }
+                    return crash;
+                }
+            }
+        }
+
+        function component3(width, height, color, x, y, type) { //피자
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.dirX = -0.8;
+            this.dirY = -0.8;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                //상하좌우 왔다리 갔다리
+                if (this.x >= myGameArea.canvas.width - this.width || this.x <= 0) {
+                    this.dirX *= -1;
+                }
+                if (this.y >= myGameArea.canvas.height - this.height || this.y <= 0) {
+                    this.dirY *= -1;
+                }
+                this.x += this.dirX;
+                this.y += this.dirY;
+
+                ctx = myGameArea.context;
+                if (type == "image") {
+                    ctx.drawImage(this.image,
+                        this.x,
+                        this.y,
+                        this.width, this.height);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+
+            this.crashWith = function (otherobj) {
+                var myleft = this.x;
+                var myright = this.x + (this.width);
+                var mytop = this.y;
+                var mybottom = this.y + (this.height);
+                var otherleft = otherobj.x;
+                var otherright = otherobj.x + (otherobj.width);
+                var othertop = otherobj.y;
+                var otherbottom = otherobj.y + (otherobj.height);
+                var crash = true;
+                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                    crash = false;
+                }
+                return crash;
+            }
+        }
+
+        function component4(width, height, color, x, y, type) { //총알
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                ctx = myGameArea.context;
+                if (type == "image") {
+                    ctx.drawImage(this.image,
+                        this.x,
+                        this.y,
+                        this.width, this.height);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+
+            this.crashWith = function (otherobj) {
+                var myleft = this.x;
+                var myright = this.x + (this.width);
+                var mytop = this.y;
+                var mybottom = this.y + (this.height);
+                var otherleft = otherobj.x;
+                var otherright = otherobj.x + (otherobj.width);
+                var othertop = otherobj.y;
+                var otherbottom = otherobj.y + (otherobj.height);
+                var crash = true;
+                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                    crash = false;
+                }
+                return crash;
+            }
+        }
+
+
+        function updateGameArea() {
+            myGameArea.clear();
+            myGameArea.frameNo += 1
+
+            if (everyinterval(280)) { // 지나가는 구름
+                myC.push(new component2(Math.floor(Math.random() * 200 + 50), Math.floor(Math.random() * 50 + 50), 구름3, 900, Math.floor(Math.random() * 395 + 1), "image"));
+                myC.push(new component2(Math.floor(Math.random() * 200 + 50), Math.floor(Math.random() * 50 + 50), 구름2, 900, Math.floor(Math.random() * 395 + 1), "image"));
+                myC.push(new component2(Math.floor(Math.random() * 200 + 50), Math.floor(Math.random() * 50 + 50), 구름3, 900, Math.floor(Math.random() * 395 + 1), "image"));
+            }
+
+            if (myGameArea.frameNo == 1 || everyinterval(50)) { //몬스터 생성
+                myObstacles.push(new component2(Math.floor(Math.random() * 30 + 35), Math.floor(Math.random() * 30 + 35), mon, 1000, Math.floor(Math.random() * 440 + 1), "image"));
+            }
+
+            if ((myGameArea.frameNo / 3000) % 2 == 0) { // 중간보스
+                myObstacles5.push(new component5(180, 250, mon2, 1100, Math.floor(Math.random() * 150), "image"));
+            }
+
+
+            if (myGameArea.frameNo % 12 == 1) {     // 프레임 나누기 15에 나머지가 1일때 , 버튼으로 할때에는  조건 추가 myGameArea.keys && myGameArea.keys[70] &&
+                myGun.push(new component4(20, 8, N3, myGamePiece.x + 140, myGamePiece.y + 32, "image"));
+            }
+
+            if (myObstacles5[0] && myGameArea.frameNo % 100 == 1 && myObstacles5[0].x == 750) {   // 중간보스 몬스터 총
+                myGun2.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
+                myGun3.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
+                myGun4.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
+                myGun5.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
+                myGun6.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
+            }
+
+            myBackground.speedX = -4;
+            myBackground.newPos();
+            myBackground.update();
+            myScore.text = "SCORE: " + myScore2;
+            myScore.update();
+
+            for (i = 0; i < myC.length; i += 1) {
+                myC[i].x += -2.5;
+                myC[i].update();
+                if (myC[i].x < -300) {
+                    myC.splice(myC.indexOf(myC[i]), 1);
+                    return;
+                }
+            }
+
+            myGamePiece.update();
+
+            if (myGamePiece.energy < 1) {
+                myGameArea.stop();
+            }
+
+            for (i = 0; i < myObstacles2.length; i += 1) {
+                if (myGamePiece.crashWith(myObstacles2[i])) {
+                    // delete myObstacles[i];
+                    myObstacles2.splice(myObstacles2.indexOf(myObstacles2[i]), 1);
+                    clearTimeout(myVar);
+                    // mySound.play();
+                    myGamePiece.energy = 100;
+                    myScore2 += 200;
+                    return;
+                }
+            }
+
+            for (i = 0; i < myObstacles.length; i++) {
+                myObstacles[i].update();
+                   if (myGamePiece.crashWith(myObstacles[i])) {
+                    myGamePiece.image.src = air3_5
+                    // delete myObstacles[i];
+                    myGamePiece.energy += -50;
+                    myObstacles.splice(myObstacles.indexOf(myObstacles[i]), 1);
+                    // mySound.play();
+                    return;
+                }
+                if (myObstacles[i].x < -50) {
+                    myObstacles.splice(myObstacles.indexOf(myObstacles[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myObstacles2.length; i++) { // 보너스
+                myObstacles2[i].update();
+            }
+
+            for (i = 0; i < myObstacles5.length; i++) { // 중간보스
+                myObstacles5[i].update();
+            }
+
+            for (i = 0; i < myGun2.length; i++) {
+                myGun2[i].x += -8;
+                myGun2[i].y += -8;
+                myGun2[i].update();
+                for (j = 0; j < myGun2.length; j += 1) {
+                    if (myGamePiece.crashWith(myGun2[j])) {
+                        myGamePiece.image.src = air3_5
+                        myGun2.splice(myGun2.indexOf(myGun2[i]), 1);
+                        myGamePiece.energy -= 50;
+                    }
+                }
+                if (myGun2[i].x < 0 || myGun2[i].y < 0) {
+                    myGun2.splice(myGun2.indexOf(myGun2[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myGun6.length; i += 1) {
+                myGun6[i].x += -9;
+                myGun6[i].y += -4;
+                myGun6[i].update();
+                for (j = 0; j < myGun6.length; j += 1) {
+                    if (myGamePiece.crashWith(myGun6[j])) {
+                        myGamePiece.image.src = air3_5
+                        myGun6.splice(myGun6.indexOf(myGun6[i]), 1);
+                        myGamePiece.energy -= 50;
+                    }
+                }
+                if (myGun6[i].x < 0 || myGun6[i].y < 0) {
+                    myGun6.splice(myGun6.indexOf(myGun6[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myGun3.length; i += 1) {
+                myGun3[i].x += -10;
+                myGun3[i].update();
+                for (j = 0; j < myGun3.length; j += 1) {
+                    if (myGamePiece.crashWith(myGun3[j])) {
+                        myGamePiece.image.src = air3_5
+                        myGun3.splice(myGun3.indexOf(myGun3[i]), 1);
+                        myGamePiece.energy -= 50;
+                    }
+                }
+                if (myGun3[i].x < 0) {
+                    myGun3.splice(myGun3.indexOf(myGun3[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myGun4.length; i += 1) {
+                myGun4[i].x += -8;
+                myGun4[i].y += 8;
+                myGun4[i].update();
+                for (j = 0; j < myGun4.length; j += 1) {
+                    if (myGamePiece.crashWith(myGun4[j])) {
+                        myGamePiece.image.src = air3_5
+                        myGun4.splice(myGun4.indexOf(myGun4[i]), 1);
+                        myGamePiece.energy -= 50;
+                    }
+                }
+                if (myGun4[i].x < 0 || myGun4[i].y > 500) {
+                    myGun4.splice(myGun4.indexOf(myGun4[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myGun5.length; i += 1) {
+                myGun5[i].x += -9;
+                myGun5[i].y += 4;
+                myGun5[i].update();
+                for (j = 0; j < myGun5.length; j += 1) {
+                    if (myGamePiece.crashWith(myGun5[j])) {
+                        myGamePiece.image.src = air3_5
+                        myGun5.splice(myGun4.indexOf(myGun5[i]), 1);
+                        myGamePiece.energy -= 50;
+                    }
+                }
+                if (myGun5[i].x < 0 || myGun5[i].y > 500) {
+                    myGun5.splice(myGun5.indexOf(myGun5[i]), 1);
+                    return;
+                }
+            }
+
+            for (i = 0; i < myGun.length; i += 1) { // 비행기의 총알
+                myGun[i].x += 10;
+                mySound.play();
+                myGun[i].update();
+                for (j = 0; j < myObstacles.length; j += 1) { // 일반 몬스터
+                    if (myGun[i].crashWith(myObstacles[j])) {
+                        myGun.splice(myGun.indexOf(myGun[i]), 1);
+                        myObstacles[j].energy -= 50;
+                        myObstacles[j].x += 5;
+                        myObstacles[j].image.src = mond;
+                    } else {
+                        myObstacles[j].image.src = mon;
+                    }
+                    if (myObstacles[j].energy < 1) { // 몬스터 에너지 없을 시 제거 됨
+                        myObstacles.splice(myObstacles.indexOf(myObstacles[j]), 1);
+                        myScore2 += 20;
+                        return;
+                    }
+                }
+
+                for (j = 0; j < myObstacles5.length; j += 1) { // 중간보스
+                    if (myGun[i].crashWith(myObstacles5[j])) {
+                        myGun.splice(myGun.indexOf(myGun[i]), 1);
+                        myObstacles5[j].energy -= 50;
+                        myObstacles5[j].image.src = mon3d;
+                    } else {
+                        myObstacles5[j].image.src = mon2;
+                    }
+
+                    if (myObstacles5[j].energy < 1) { // 중간보스 몬스터 에너지 없을 시 제거 됨
+                        myObstacles2.push(new component3(40, 40, piz, myObstacles5[j].x + 90, myObstacles5[j].y + 125, "image"));
+                        myObstacles5.splice(myObstacles5.indexOf(myObstacles5[j]), 1);
+                        myScore2 += 500;
+                        myVar = setTimeout(function () { myObstacles2.splice(myObstacles2.indexOf(myObstacles2[i]), 1); }, 17000); // 시간 경과되면 사라진다.
+                        return;
+                    }
+
+                }
+                if (myGun[i].x > 1080) {
+                    myGun.splice(myGun.indexOf(myGun[i]), 1);
+                    return;
+                }
+            }
+
+            if (myGamePiece.energy == 50) {
+                myGamePiece.image.src = air3_50
+
+            }
+            else {
+                myGamePiece.image.src = air3;
+            }
+
+            if (myGameArea.keys && myGameArea.keys[38]) {
+                // myGamePiece.image.src = "https://www.w3schools.com/graphics/angry.gif"
+                myGamePiece.y += -8;
+            }
+            if (myGameArea.keys && myGameArea.keys[40]) {
+                // myGamePiece.image.src = "https://www.w3schools.com/graphics/angry.gif"
+                myGamePiece.y += 8;
+            }
+            if (myGameArea.keys && myGameArea.keys[37]) {
+                // myGamePiece.image.src = "https://www.w3schools.com/graphics/angry.gif"
+                myGamePiece.x += -8;
+            }
+            if (myGameArea.keys && myGameArea.keys[39]) {
+                // myGamePiece.image.src = "https://www.w3schools.com/graphics/angry.gif"
+                myGamePiece.x += 8;
+            }
+            if (myGamePiece.x < 0) {
+                myGamePiece.x += 8;
+                myGamePiece.update();
+            }
+            if (myGamePiece.x > 950) {
+                myGamePiece.x += -8;
+                myGamePiece.update();
+            }
+            if (myGamePiece.y < 0) {
+                myGamePiece.y += 8;
+                myGamePiece.update();
+            }
+            if (myGamePiece.y > 440) {
+                myGamePiece.y += -8;
+                myGamePiece.update();
+            } else {
+                myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0;
+            }
+
+            // myScore.text = "SCORE: " + myScore2;
+            // myScore.update();
+            // myGamePiece.update();
+        }
+
+
+        function everyinterval(n) {
+            if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
+            return false;
+        }
+
+
+        function reStartGame() {
+            myGameArea.stop();
+            document.getElementById("canvas").innerHTML = "";
+            myObstacles.splice(0, myObstacles.length);
+            myObstacles2.splice(0, myObstacles2.length);
+            myC.splice(0, myC.length);
+            myGun.splice(0, myGun.length);
+            myScore2 = 0;
+            startGame();
+        }
+
+        startGame();
+</script>
+<button onclick="reStartGame()">다시하기</button><a href="{% url 'blog:post_list'%}">홈으로</a><h3>몬스터 처치시20점 피자는 에너지와 보너스 점수입니다. </h3>
+  {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+{% load staticfiles %}
+
+    <link rel="stylesheet" href="{% static 'css/zoom.css' %}">
+<section>
+    <nav>
+        <div>
+            <input type="file" accept="image/*" onchange="loadFile(this.files)">
+        </div>
+    </nav>
+
+    <article>
+        <div class="img-zoom-container" onmouseout="off()">
+            <div class="relative">
+                <img id="myimage" src="" width="380" height="320" alt="">
+                <div class="absolute"> <img id="myresult" class="img-zoom-result"></div>
+            </div>
+        </div>
+        <h2>사진을 확대해서 볼수 있어요~~</h2>
+    </article>
+</section>
+
+<script type="text/javascript" src="{% static 'css/zoom.js' %}">
+</script>
+           {% endblock %}

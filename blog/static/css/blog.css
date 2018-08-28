@@ -1,34 +1,14 @@
-h1 a {
-    color: #FCA205;
-    font-family: 'Lobster';
+* {
+    box-sizing: border-box;
 }
 
 body {
-    padding-left: 15px;
-}
-
-.page-header {
-    background-color: #ff9400;
-    margin-top: 0;
-    padding: 20px 20px 20px 40px;
-}
-
-.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
-    color: #ffffff;
-    font-size: 36pt;
-    text-decoration: none;
-}
-
-.content {
-    margin-left: 40px;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Lobster', cursive;
-}
-
-.date {
-    color: #828282;
+    font-family: Arial, Helvetica, sans-serif;
+background-color: gray;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+     text-align: left;
 }
 
 .save {
@@ -40,11 +20,13 @@ h1, h2, h3, h4 {
 }
 
 .top-menu, .top-menu:hover, .top-menu:visited {
+position: absolute;
     color: #ffffff;
-    float: right;
+    flex: left;
     font-size: 26pt;
-    margin-right: 20px;
+    margin-right: 10px;
 }
+
 
 .post {
     margin-bottom: 70px;
@@ -56,4 +38,73 @@ h1, h2, h3, h4 {
 
 .comment {
     margin: 20px 0px 20px 20px;
+}
+
+
+
+.header{
+    background-color: black;
+    color: white;
+    height: 15%;
+    width: 25%;
+    margin:0;
+        border: 1px solid blue;
+}
+
+.footer{
+    background-color: #C785C8;
+    color: white;
+    height: 8%;
+    width: 100%;
+    margin:0;
+    text-align: center;
+    border: 1px solid blue;
+}
+
+.column {
+height: 80%;
+    float: left;
+    padding: 15px;
+    border:1px solid green;
+}
+
+.menu {
+    background-color: #C8EFD4 ;
+    width: 25%;
+    height: 630px;
+     border:1px solid green;
+}
+
+.content {
+    background-color: #FFFCCC;
+    width: 75%;
+    height: 630px;
+    padding: 10px;
+    overflow:auto;
+}
+
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+section:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+li>a {
+font-size : 3em;
+}
+
+h2 {
+text-align:left;
 }
