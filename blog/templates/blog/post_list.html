@@ -2,14 +2,40 @@
 
 
 {% block content %}
-            {% for post in posts %}
-                <div class="post">
-                    <div class="date">
-                        <p><!--퍼블리쉬데이트--> {{ post.published_date }}</p>
-                    </div>
-                    <h1><a href="{% url 'blog:post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-                    <p>{{ post.text|linebreaksbr }}</p>
-                    <a href="{% url 'blog:post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
-                </div>
-            {% endfor %}
-           {% endblock %}
+<style>
+  nav {
+            float: left;
+            width: 35%;
+            height: 20%;
+            overflow: auto;
+            background: white;
+            border : 3px double black;
+        }
+
+        article {
+            padding: 20px;
+            width: 65%;
+            height: 20%;
+            overflow: auto;
+            background: white;
+            border : 3px double black;
+        }
+</style>
+<h2>자유 게시판</h2>
+    {% for post in posts %}
+<section>
+        <nav>
+            <div class="post">
+                <h1><a href="{% url 'blog:post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                <a href="{% url 'blog:post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
+            </div>
+        </nav>
+        <article>
+            <div class="date">
+                <p>{{post.text}}</p>
+                <p><!--퍼블리쉬데이트--> {{ post.published_date }}</p>
+            </div>
+        </article>
+</section>
+{% endfor %}
+{% endblock %}

@@ -5,21 +5,24 @@
         .img-zoom-container {
             position: relative;
             float: left;
+
         }
 
         .img-zoom-lens {
-            /* visibility: collapse; */
             position: absolute;
-
-            border: 1px solid #d4d4d4;
-            /*set the size of the lens:*/
-            width: 50px;
-            height: 50px;
+            /* border: 3px solid #d4d4d4; /* 실선*/
+            /* border: 3px dotted #d4d4d4; /*점선*/
+           /* border: 3px dashed #d4d4d4; /*바느질선*/
+           /* border: 3px groove #d4d4d4; /* 입체선 */
+            border: 3px double #FF7F27; /* 선이2개 */
+            /*박스사이즈*/
+            width: 100px;
+            height: 100px;
         }
 
         .img-zoom-result {
+            visibility: hidden;
             position: fixed;
-            visibility: collapse;
             float: left;
             border: 1px solid #d4d4d4;
             width: 400px;
@@ -36,7 +39,7 @@
 
         nav {
             float: left;
-            width: 26.5%;
+            width: 20%;
             height: 100%;
             background: #ccc;
             padding: 20px;
@@ -44,18 +47,10 @@
 
         article {
             padding: 20px;
-            width: 73.5%;
+            width: 80%;
             background-color: #f1f1f1;
             height: 100%;
             overflow: auto;
-        }
-
-        header {
-            background-color: #666;
-            padding: 30px;
-            text-align: center;
-            font-size: 35px;
-            color: white;
         }
 
         div.relative {
@@ -67,3 +62,18 @@
             top: 0;
             left: 380px;
         }
+
+
+        h3 > a:link, h3 >a:visited {
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 3px 2px gray;
+    display: inline-block;
+}
+
+
+h3 > a:hover, h3 >a:active {
+    background-color: lightblue;
+}

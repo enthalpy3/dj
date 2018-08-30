@@ -1,15 +1,21 @@
-
-{% extends 'blog/base.html' %}
 {%load staticfiles%}
-    {% block content %}
-    <style>
-        canvas {
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<style>
+        div>canvas {
             border: 1px solid #d3d3d3;
         }
-    </style>
-
+</style>
 <body>
-<div id="canvas">
+<div id="game">
 </div>
 
 <script>
@@ -73,7 +79,7 @@ var air3 = "{% static 'img/air3.png' %}";
             this.canvas = document.createElement("canvas");
             this.canvas.width = 1100;
             this.canvas.height = 500;
-            document.getElementById("canvas").appendChild(this.canvas);
+            document.getElementById("game").appendChild(this.canvas);
             this.context = this.canvas.getContext("2d");
             this.frameNo = 0;
             // this.x = e.layerX;
@@ -101,9 +107,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 clearInterval(this.interval);
                 // mySound.play();
                 this.pause = true;
-                alert("게임끝" + "최종점수" + myScore2)
-
-
+                alert("게임끝 당신의 최종점수는 " + myScore2+" 입니다.")
             }
 
             this.clear = function () {
@@ -404,7 +408,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 myGun.push(new component4(20, 8, N3, myGamePiece.x + 140, myGamePiece.y + 32, "image"));
             }
 
-            if (myObstacles5[0] && myGameArea.frameNo % 100 == 1 && myObstacles5[0].x == 750) {   // 중간보스 몬스터 총
+            if (myObstacles5[0] && myGameArea.frameNo % 100 == 1 && myObstacles5[0].x == 650) {   // 중간보스 몬스터 총
                 myGun2.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
                 myGun3.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
                 myGun4.push(new component4(30, 30, bom, myObstacles5[0].x, myObstacles5[0].y + 70, "image"));
@@ -476,7 +480,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 for (j = 0; j < myGun2.length; j += 1) {
                     if (myGamePiece.crashWith(myGun2[j])) {
                         myGamePiece.image.src = air3_5
-                        myGun2.splice(myGun2.indexOf(myGun2[i]), 1);
+                        myGun2.splice(myGun2.indexOf(myGun2[j]), 1);
                         myGamePiece.energy -= 50;
                     }
                 }
@@ -493,7 +497,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 for (j = 0; j < myGun6.length; j += 1) {
                     if (myGamePiece.crashWith(myGun6[j])) {
                         myGamePiece.image.src = air3_5
-                        myGun6.splice(myGun6.indexOf(myGun6[i]), 1);
+                        myGun6.splice(myGun6.indexOf(myGun6[j]), 1);
                         myGamePiece.energy -= 50;
                     }
                 }
@@ -509,7 +513,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 for (j = 0; j < myGun3.length; j += 1) {
                     if (myGamePiece.crashWith(myGun3[j])) {
                         myGamePiece.image.src = air3_5
-                        myGun3.splice(myGun3.indexOf(myGun3[i]), 1);
+                        myGun3.splice(myGun3.indexOf(myGun3[j]), 1);
                         myGamePiece.energy -= 50;
                     }
                 }
@@ -526,7 +530,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 for (j = 0; j < myGun4.length; j += 1) {
                     if (myGamePiece.crashWith(myGun4[j])) {
                         myGamePiece.image.src = air3_5
-                        myGun4.splice(myGun4.indexOf(myGun4[i]), 1);
+                        myGun4.splice(myGun4.indexOf(myGun4[j]), 1);
                         myGamePiece.energy -= 50;
                     }
                 }
@@ -543,7 +547,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 for (j = 0; j < myGun5.length; j += 1) {
                     if (myGamePiece.crashWith(myGun5[j])) {
                         myGamePiece.image.src = air3_5
-                        myGun5.splice(myGun4.indexOf(myGun5[i]), 1);
+                        myGun5.splice(myGun4.indexOf(myGun5[j]), 1);
                         myGamePiece.energy -= 50;
                     }
                 }
@@ -558,13 +562,18 @@ var air3 = "{% static 'img/air3.png' %}";
                 mySound.play();
                 myGun[i].update();
                 for (j = 0; j < myObstacles.length; j += 1) { // 일반 몬스터
+                try{
                     if (myGun[i].crashWith(myObstacles[j])) {
                         myGun.splice(myGun.indexOf(myGun[i]), 1);
                         myObstacles[j].energy -= 50;
                         myObstacles[j].x += 5;
                         myObstacles[j].image.src = mond;
-                    } else {
+                    }
+                      else {
                         myObstacles[j].image.src = mon;
+                    }
+                    }catch{
+                    return;
                     }
                     if (myObstacles[j].energy < 1) { // 몬스터 에너지 없을 시 제거 됨
                         myObstacles.splice(myObstacles.indexOf(myObstacles[j]), 1);
@@ -655,7 +664,7 @@ var air3 = "{% static 'img/air3.png' %}";
 
         function reStartGame() {
             myGameArea.stop();
-            document.getElementById("canvas").innerHTML = "";
+            document.getElementById("game").innerHTML = "";
             myObstacles.splice(0, myObstacles.length);
             myObstacles2.splice(0, myObstacles2.length);
             myC.splice(0, myC.length);
@@ -665,6 +674,12 @@ var air3 = "{% static 'img/air3.png' %}";
         }
 
         startGame();
+
 </script>
-<button onclick="reStartGame()">다시하기</button><a href="{% url 'blog:post_list'%}">홈으로</a><h3>몬스터 처치시20점 피자는 에너지와 보너스 점수입니다. </h3>
-  {% endblock %}
+<button onclick='reStartGame()'>다시하기</button>
+<h2>
+    <a href="{% url 'blog:post_list'%}"> 홈으로</a>
+    <a href="{% url 'blog:game_rank'%}">게임 레코드</a>
+</h2>
+</body>
+</html>

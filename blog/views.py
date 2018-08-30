@@ -19,6 +19,12 @@ def post_detail(request, pk):
 def post_game(request):
     return render(request, 'blog/post_game.html', {})
 
+def game_detail(request):
+    return render(request, 'blog/game_detail.html', {})
+
+def game_rank(request):
+    return render(request, 'blog/game_rank.html', {})
+
 def post_zoom(request):
     return render(request, 'blog/post_zoom.html', {})
 

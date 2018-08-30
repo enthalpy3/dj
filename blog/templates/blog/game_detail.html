@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+{%load staticfiles%}
+{% block content %}
+<style>
+
+
+           h2 > a:link, h2 >a:visited {
+           text-decoration: underline;
+    color: black;
+    padding: 14px 25px;
+    text-align: center;
+    display: inline-block;
+}
+
+
+h2 > a:hover, h2 >a:active {
+    background-color: lightblue;
+}
+</style>
+<ui>
+    <h2>게임설명</h2>
+    <h3>
+        <li>
+            몬스터 처치시20점
+        </li>
+        <li>
+            피자는 에너지회복과 보너스 점수
+        </li>
+        <li>
+            중형몬스터 처치시 피자 획득 가능
+        </li>
+        <li>
+            총알은 자동발사 이동은 방향키를 이용하세요 ↑←↓→
+        </li>
+    </h3>
+</ui>
+
+
+<ui>
+    <h2> 게임 코딩중...고민거리</h2>
+    <h3>
+        <li>
+            crashwith 부분 객체 이미지끼리 충돌시 데미지를 받을때 이미지의 모서리 부분만 다아도 충돌이 되어서, <br>고민을 하다가 crashwith 부분에서 좌표와 넓이 길이를 수정하여 좀더
+            정교한
+            충돌이 발생 했을때 데미지를 받게 함.
+        </li>
+        <li>
+            코딩작업중 이미지를 같은 폴더에 서 바로 사용을 하였는데 서버에서는 작동되지 않아서 고민중 static 파일을 변수에 담아서 사용하는 방법을 사용.
+        </li>
+        <li>
+            캐릭터와 몬스터가 한번의 충돌이 아닌 여러번의 충돌효과를 실행하기 위해서 에너지 구현과, 이미지를 이용해서 데미지 효과.
+        </li>
+    </h3>
+</ui>
+
+<h2><a href="{% url 'blog:post_game'%}">게임하기</a>
+    <a href="https://github.com/enthalpy3/dj/blob/master/blog/templates/blog/post_game.html">코드보기</a>
+</h2>
+
+<div>
+    <img src="{% static 'img/게임1.png' %}" alt="">
+</div>
+
+{% endblock %}
