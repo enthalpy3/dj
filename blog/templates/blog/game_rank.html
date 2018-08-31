@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,9 +6,44 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <title>game rank</title>
+    <style>
+        table {
+        border: 2px solid black;
+        }
+        td, th {
+        border : 1px solid black;
+        }
+
+p{
+border : 3px solid black;
+}
+
+    </style>
 </head>
 <body>
+
 <h2>아직 중비중입니다.</h2>
+    <table>
+        <tr>
+            <th>랭킹</th>
+            <th>스코어</th>
+            <th>이름</th>
+            <th>날짜</th>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <ol>
+                    {% for rank in ranks %}
+                    <li><p>|{{ rank.score }} |{{ rank.name|linebreaksbr }} |{{ rank.created_date }}|</p></li>
+                    {% endfor %}
+                </ol>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

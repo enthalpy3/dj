@@ -21,6 +21,7 @@ class Post(models.Model):
     def approved_comments(self):
         return self.comments.filter(approved_comment=True)
 
+
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments')
     author = models.CharField(max_length=200)
@@ -36,3 +37,10 @@ class Comment(models.Model):
         return self.text
 
 
+class Rank(models.Model):
+    name = models.CharField(max_length=5)
+    score = models.IntegerField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __int__(self):
+        return self.score

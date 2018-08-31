@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
 from .forms import PostForm, CommentForm
-from .models import Post, Comment
+from .models import Post, Comment, Rank
 
 
 @login_required
@@ -23,7 +23,8 @@ def game_detail(request):
     return render(request, 'blog/game_detail.html', {})
 
 def game_rank(request):
-    return render(request, 'blog/game_rank.html', {})
+    ranks = Rank.objects.order_by('-score')
+    return render(request, 'blog/game_rank.html', {'ranks':ranks})
 
 def post_zoom(request):
     return render(request, 'blog/post_zoom.html', {})

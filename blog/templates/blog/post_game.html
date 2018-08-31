@@ -13,6 +13,7 @@
         div>canvas {
             border: 1px solid #d3d3d3;
         }
+
 </style>
 <body>
 <div id="game">
@@ -107,7 +108,7 @@ var air3 = "{% static 'img/air3.png' %}";
                 clearInterval(this.interval);
                 // mySound.play();
                 this.pause = true;
-                alert("게임끝 당신의 최종점수는 " + myScore2+" 입니다.")
+
             }
 
             this.clear = function () {
@@ -435,6 +436,15 @@ var air3 = "{% static 'img/air3.png' %}";
 
             if (myGamePiece.energy < 1) {
                 myGameArea.stop();
+                 alert("게임끝 당신의 최종점수는 " + myScore2+" 입니다.")
+                  var name = prompt("이름 또는 닉네임을 입렵하세요");
+                   if (typeof (Storage) !== "undefined") {
+                    // Store
+                    localStorage.setItem(myScore2, name);
+                    document.getElementById("result").innerHTML = localStorage.getItem(myScore2);
+                } else {
+                    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+                }
             }
 
             for (i = 0; i < myObstacles2.length; i += 1) {
@@ -674,6 +684,7 @@ var air3 = "{% static 'img/air3.png' %}";
         }
 
         startGame();
+
 
 </script>
 <button onclick='reStartGame()'>다시하기</button>

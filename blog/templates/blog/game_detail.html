@@ -2,20 +2,17 @@
 {%load staticfiles%}
 {% block content %}
 <style>
-
-
-           h2 > a:link, h2 >a:visited {
-           text-decoration: underline;
+    h2 > a:link, h2 >a:visited {
+    text-decoration: underline;
     color: black;
     padding: 14px 25px;
     text-align: center;
     display: inline-block;
-}
+    }
 
-
-h2 > a:hover, h2 >a:active {
+    h2 > a:hover, h2 >a:active {
     background-color: lightblue;
-}
+    }
 </style>
 <ui>
     <h2>게임설명</h2>
@@ -31,6 +28,9 @@ h2 > a:hover, h2 >a:active {
         </li>
         <li>
             총알은 자동발사 이동은 방향키를 이용하세요 ↑←↓→
+        </li>
+        <li>
+            게임스코어와 이름은 로컬스토리지에 저장됩니다~
         </li>
     </h3>
 </ui>
