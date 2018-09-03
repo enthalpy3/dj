@@ -112,6 +112,9 @@
     <nav class="column menu">
         <ul>
             <li>
+                <a href="{% url 'blog:about_me'%}">나란 사람은?</a>
+            </li>
+            <li>
                 <a href="{% url 'blog:post_list'%}">글보기</a>
             </li>
             <li>
@@ -136,6 +139,8 @@
 
     <at class="column content">
         {% block content %}
+
+
 
         {% endblock %}
     </at>

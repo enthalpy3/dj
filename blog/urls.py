@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^post/game/$', views.post_game, name='post_game'),
     url(r'^post/game_detail/$', views.game_detail, name='game_detail'),
     url(r'^post/game_rank/$', views.game_rank, name='game_rank'),
+    url(r'^post/about_me/$', views.about_me, name='about_me'),
     url(r'^post/zoom/$', views.post_zoom, name='post_zoom'),
     url(r'^post/(?P<pk>\d+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^drafts/$', views.post_draft_list, name='post_draft_list'),

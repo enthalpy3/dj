@@ -29,6 +29,9 @@ def game_rank(request):
 def post_zoom(request):
     return render(request, 'blog/post_zoom.html', {})
 
+def about_me(request):
+    return render(request, 'blog/about_me.html', {})
+
 @login_required
 def post_new(request):
     if request.method == "POST":

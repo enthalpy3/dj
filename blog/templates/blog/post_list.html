@@ -3,39 +3,108 @@
 
 {% block content %}
 <style>
-  nav {
-            float: left;
-            width: 35%;
-            height: 20%;
-            overflow: auto;
-            background: white;
-            border : 3px double black;
-        }
+table.pan {
+    border-collapse: collapse;
+    text-align: left;
+    line-height: 1.5;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin: 20px 10px;
+}
+table.pan thead th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    color: #fff;
+    background: #0B6B28;
+    margin: 20px 10px;
+}
+table.pan tbody th {
+    width: 450px;
+    padding: 10px;
+}
+table.pan .td {
+    width: 600px;
+    padding: 10px;
+    vertical-align: top;
+}
 
-        article {
-            padding: 20px;
-            width: 65%;
-            height: 20%;
-            overflow: auto;
-            background: white;
-            border : 3px double black;
-        }
+td>div a.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+td>div a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.date{
+text : max_length:20;
+}
+
+<!--번호
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+ -->
 </style>
+
 <h2>자유 게시판</h2>
-    {% for post in posts %}
-<section>
-        <nav>
-            <div class="post">
-                <h1><a href="{% url 'blog:post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-                <a href="{% url 'blog:post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
-            </div>
-        </nav>
-        <article>
-            <div class="date">
-                <p>{{post.text}}</p>
+{% for post in posts %}
+    <table class="pan">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>날짜</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td class="td">
+                <div class="post">
+                    <h1><a href="{% url 'blog:post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                </div>
+                <div>
+                    <a href="{% url 'blog:post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
+                </div>
+            </td>
+            <td>
                 <p><!--퍼블리쉬데이트--> {{ post.published_date }}</p>
-            </div>
-        </article>
-</section>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 {% endfor %}
+<!--<div class="pagination">-->
+  <!--<a href="#">&laquo;</a>-->
+  <!--<a href="#">1</a>-->
+  <!--<a href="#">2</a>-->
+  <!--<a href="#">3</a>-->
+  <!--<a href="#">4</a>-->
+  <!--<a href="#">5</a>-->
+  <!--<a href="#">6</a>-->
+  <!--<a href="#">&raquo;</a>-->
+<!--</div>-->
 {% endblock %}

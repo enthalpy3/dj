@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<style>
+img{
+position : absolute;
+top:100px;
+left:1100px;
+}
+</style>
+
+<h2>ABOUT ME</h2>
+<p>이름:김도성</p>
+<p>닉네임:juggle tiger</p>
+<div>
+<img src="{% static 'img/tiger2.jpg'%}" alt="my" height="450px;" width="300px;">
+</div>
+{% endblock %}

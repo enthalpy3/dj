@@ -2,34 +2,50 @@
 
 
 {% block content %}
-                <div class="post">
-                    {% if post.published_date %}
-                    <div class="date">
-                        <p>{{ post.published_date }}</p>
-                    </div>
-                    {% else %}
-                    <a class="btn btn-default" href="{% url 'blog:post_publish' pk=post.pk %}">Publish</a>
-                    {% endif %}
-                    <a class="btn btn-default" href="{% url 'blog:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                    <a class="btn btn-default" href="{% url 'blog:post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <h1>{{ post.title }}</h1>
-                    <p>{{ post.text|linebreaksbr }}</p>
-                </div>
-<hr>
-<a class="btn btn-default" href="{% url 'blog:add_comment_to_post' pk=post.pk %}">Add comment</a>
-{% for comment in post.comments.all %}
-    <div class="comment">
-        <div class="date">
-            {{ comment.created_date }}
-            {% if not comment.approved_comment %}
-                <a class="btn btn-default" href="{% url 'blog:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                <a class="btn btn-default" href="{% url 'blog:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
-            {% endif %}
-        </div>
-        <strong>{{ comment.author }}</strong>
-        <p>{{ comment.text|linebreaks }}</p>
+<style>
+    .text{
+    background-color :white;
+    border : 1px dashed black;
+    }
+</style>
+<div class="post">
+    {% if post.published_date %}
+    <div class="date">
+        <p>{{ post.published_date }}</p>
     </div>
+    {% else %}
+    <a class="btn btn-default" href="{% url 'blog:post_publish' pk=post.pk %}">Publish</a>
+    {% endif %}
+    <a class="btn btn-default" href="{% url 'blog:post_remove' pk=post.pk %}"><span
+            class="glyphicon glyphicon-remove"></span></a>
+    <a class="btn btn-default" href="{% url 'blog:post_edit' pk=post.pk %}"><span
+            class="glyphicon glyphicon-pencil"></span></a>
+    <div class="text">
+    <h1>{{ post.title }}</h1>
+    </div>
+    <div class="text">
+    <p>{{ post.text|linebreaksbr }}</p>
+    </div>
+<a class="btn btn-default" href="{% url 'blog:add_comment_to_post' pk=post.pk %}">댓글 쓰기</a>
+</div>
+<hr>
+{% for comment in post.comments.all %}
+<div class="comment">
+    <div class="date">
+        {{ comment.created_date }}
+        {% if not comment.approved_comment %}
+        <a class="btn btn-default" href="{% url 'blog:comment_remove' pk=comment.pk %}"><span
+                class="glyphicon glyphicon-remove"></span></a>
+        <a class="btn btn-default" href="{% url 'blog:comment_approve' pk=comment.pk %}"><span
+                class="glyphicon glyphicon-ok"></span></a>
+        {% endif %}
+    </div>
+    <div class="text">
+    <strong>{{ comment.author }}</strong>
+    <p class="text">{{ comment.text|linebreaks }}</p>
+    </div>
+</div>
 {% empty %}
-    <p>No comments here yet :(</p>
+<p>No comments here yet :(</p>
 {% endfor %}
 {% endblock %}

@@ -14,6 +14,10 @@
             border: 1px solid #d3d3d3;
         }
 
+button{
+border-radius: 8px;
+}
+
 </style>
 <body>
 <div id="game">
@@ -192,8 +196,8 @@ var air3 = "{% static 'img/air3.png' %}";
             this.speedX = 0;
             this.speedY = 0;
             this.energy = 150;
-            this.dirX = Math.floor(Math.random() * -0.8);
-            this.dirY = Math.floor(Math.random() * -3);
+            this.dirX = Math.floor(Math.random() * -3);
+            this.dirY = Math.floor(Math.random() * -5);
             this.x = x;
             this.y = y;
             this.update = function () {
@@ -441,7 +445,7 @@ var air3 = "{% static 'img/air3.png' %}";
                    if (typeof (Storage) !== "undefined") {
                     // Store
                     localStorage.setItem(myScore2, name);
-                    document.getElementById("result").innerHTML = localStorage.getItem(myScore2);
+                    //document.getElementById("result").innerHTML = localStorage.getItem(myScore2);
                 } else {
                     document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
                 }
@@ -685,6 +689,7 @@ var air3 = "{% static 'img/air3.png' %}";
         }
 
         startGame();
+
 
 
 </script>
